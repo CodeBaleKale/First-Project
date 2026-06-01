@@ -1,0 +1,42 @@
+! ===========================================================================
+!  PACKET-PATH TRACE (run on ANY switch, IOS 15 or IOS-XE 16)
+!  Purpose: see HOW frames travel to the problem nodes and find loops/dup paths.
+!  READ ONLY. Safe to paste. Replace XXX only if chasing HPSA7 (172.17.9.XXX).
+! ===========================================================================
+terminal length 0
+!
+! ---- L3 path to each node (does it even route, how many hops) ----
+! Note: MPU5 mesh is L2-bridged, so these are same-subnet - expect 1 hop or
+! 'host unreachable'. A node that traceroutes vs one that does not is a signal.
+traceroute 172.17.9.7 probe 2 timeout 1
+traceroute 172.17.9.135 probe 2 timeout 1
+traceroute 172.17.9.5 probe 2 timeout 1
+!
+! ---- L2 path: where does the switch send a frame for each node's MAC ----
+! .7 mgmt MAC:
+show mac address-table address 0018.a601.2290
+! Fa0/1 occupant (Annex local):
+show mac address-table address 0018.a6e0.bf79
+! Chancery (known-good control) - confirm a healthy node's single stable port:
+show mac address-table address 0018.a601.1977
+!
+! ---- ARP-to-MAC-to-PORT chain for the problem nodes ----
+show ip arp 172.17.9.7
+show ip arp 172.17.9.135
+show ip arp 172.17.9.5
+!
+! ---- DUPLICATE detection (same MAC on 2 ports, or 2 IPs same MAC) ----
+! A MAC that appears on two ports here = an active L2 loop on VLAN 17.
+show mac address-table dynamic vlan 17 | include 0018.a601|0018.a6e0
+!
+! ---- Reachability burst: catch the ~7% window for .7 ----
+! Watch for a run of '!' - that is an up-window. Ctrl-Shift-6 to break early.
+ping 172.17.9.7 repeat 200 timeout 1 size 64
+!
+! ---- Confirm .135 truly dead from THIS switch's vantage point ----
+ping 172.17.9.135 repeat 100 timeout 1 size 64
+!
+terminal length 0
+! ===========================================================================
+!  END PATH TRACE
+! ===========================================================================

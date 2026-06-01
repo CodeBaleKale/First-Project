@@ -1,0 +1,58 @@
+! ===========================================================================
+!  FABRIC COLLECT - IOS-XE 16.9 switches (Catalyst 9300)
+!  Targets: BLDG 602 9300 (172.17.9.76), ALT_EOC 9300 / AnnexII 3rd Flr (172.17.9.3),
+!           EOC / RSOTOC SNW (172.17.9.2)
+!  READ ONLY. No config mode, no write, no clear, no shut. Safe to paste.
+!  HOW: enable session logging in MobaXterm, be at the # prompt, paste block.
+! ===========================================================================
+terminal length 0
+terminal exec prompt timestamp
+!
+! ---- identity / clock ----
+show clock detail
+show version | include uptime|Version|System image|Model Number
+show inventory
+!
+! ---- SPANNING TREE (core of the loop question) ----
+show spanning-tree vlan 17
+show spanning-tree vlan 17 detail
+show spanning-tree summary
+show spanning-tree blockedports
+show spanning-tree inconsistentports
+show spanning-tree vlan 17 detail | include occurr|from|topology|Port|ROOT|designated
+!
+! ---- TRUNKS / VLAN reach ----
+show interfaces trunk
+show vlan brief | include 17|WAVES|active
+!
+! ---- ARP (mesh subnet 172.17.9.x) ----
+show ip arp | include 172.17.9
+show ip arp summary
+show ip arp | include Incomplete
+!
+! ---- MAC table ----
+show mac address-table dynamic vlan 17
+show mac address-table count
+show mac address-table address 0018.a601.2290
+show mac address-table address 0018.a6e0.bf79
+show mac address-table aging-time
+!
+! ---- INTERFACE HEALTH ----
+show interfaces status
+show interfaces counters errors
+show interfaces | include line protocol|CRC|input errors|output errors|resets|reliability
+!
+! ---- CDP/LLDP neighbor map ----
+show cdp neighbors detail | include Device ID|IP address|Interface|Platform
+show lldp neighbors detail | include System Name|Local Intf|Port id|Management
+!
+! ---- LOG scan ----
+show logging | include MACFLAP|SW_MATM|MAC_MOVE
+show logging | include SPANTREE|ROOTGUARD|LOOPGUARD|BPDUGUARD
+show logging | include LINK-3|LINEPROTO-5|DUPLEX|errdisable
+show logging | include 172.17.9.7|172.17.9.135|DUP
+!
+terminal no exec prompt timestamp
+! ===========================================================================
+!  END IOS-XE COLLECT
+! ===========================================================================

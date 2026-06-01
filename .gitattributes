@@ -1,0 +1,6 @@
+# Cisco paste-in scripts: keep CRLF so they stay paste-ready from
+# Windows editors (Notepad) into MobaXterm/PuTTY SSH sessions.
+*.ios text eol=crlf
+
+# Worksheet is binary; never apply text/eol filters to it.
+*.pdf binary

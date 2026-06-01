@@ -1,0 +1,67 @@
+! ===========================================================================
+!  FABRIC COLLECT - IOS 15.2 switches (2960 / 2960C)
+!  Targets: Annex II Roof, Chancery 2960, RES 4 Relay (and any 2960-class)
+!  READ ONLY. No config mode, no write, no clear, no shut. Safe to paste.
+!  HOW: enable session logging in MobaXterm, ensure you are at the # prompt,
+!       paste this whole block. It self-runs. Repeat on each IOS-15 switch.
+! ===========================================================================
+terminal length 0
+terminal exec prompt timestamp
+!
+! ---- identity / clock ----
+show clock detail
+show version | include uptime|RELEASE|System image|ID
+show inventory
+!
+! ---- SPANNING TREE (the core of the loop question) ----
+! Who is root for VLAN 17, and which local port reaches it:
+show spanning-tree vlan 17
+show spanning-tree vlan 17 detail
+! Root + bridge ID + topology-change counters across all VLANs at a glance:
+show spanning-tree summary
+! Any ports blocking (a blocked port = STP is actively breaking a loop):
+show spanning-tree blockedports
+! Inconsistent ports (root-guard/loop-guard/BPDU events):
+show spanning-tree inconsistentports
+! Detailed TCN history per VLAN17 interface (last change + count):
+show spanning-tree vlan 17 detail | include occurr|from|topology|Port|ROOT|designated
+!
+! ---- TRUNKS / VLAN reach (which links carry VLAN 17) ----
+show interfaces trunk
+show vlan brief | include 17|WAVES|active
+!
+! ---- ARP (who is alive on the mesh subnet 172.17.9.x) ----
+show ip arp | include 172.17.9
+show ip arp summary
+! Look for duplicate or incomplete entries:
+show ip arp | include Incomplete
+!
+! ---- MAC table (where each node physically lands) ----
+show mac address-table dynamic vlan 17
+show mac address-table count
+! Track the two MACs of interest (.7 mgmt vs the Fa0/1 occupant):
+show mac address-table address 0018.a601.2290
+show mac address-table address 0018.a6e0.bf79
+! MAC aging (short aging can churn a marginal node off/on):
+show mac address-table aging-time
+!
+! ---- INTERFACE HEALTH on VLAN17 uplinks/backbone ----
+show interfaces status
+show interfaces counters errors
+! Per-interface drops/CRC/resets (catches a dirty trunk that desyncs STP):
+show interfaces | include line protocol|CRC|input errors|output errors|resets|reliability
+!
+! ---- CDP/LLDP neighbor map (build the real topology) ----
+show cdp neighbors detail | include Device ID|IP address|Interface|Platform
+show lldp neighbors detail | include System Name|Local Intf|Port id|Management
+!
+! ---- LOG scan for the smoking guns ----
+show logging | include MACFLAP|SW_MATM|MAC_MOVE
+show logging | include SPANTREE|ROOTGUARD|LOOPGUARD|BPDUGUARD
+show logging | include LINK-3|LINEPROTO-5|DUPLEX|errdisable
+show logging | include 172.17.9.7|172.17.9.135|DUP
+!
+terminal no exec prompt timestamp
+! ===========================================================================
+!  END IOS-15 COLLECT
+! ===========================================================================
