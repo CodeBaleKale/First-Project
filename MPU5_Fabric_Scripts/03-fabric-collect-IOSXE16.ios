@@ -23,7 +23,7 @@ show spanning-tree vlan 17 detail | include occurr|from|topology|Port|ROOT|desig
 !
 ! ---- TRUNKS / VLAN reach ----
 show interfaces trunk
-show vlan brief | include 17|WAVES|active
+show vlan brief | include ^17 |WAVES
 !
 ! ---- ARP (mesh subnet 172.17.9.x) ----
 show ip arp | include 172.17.9

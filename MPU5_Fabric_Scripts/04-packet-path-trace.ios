@@ -4,6 +4,7 @@
 !  READ ONLY. Safe to paste. Replace XXX only if chasing HPSA7 (172.17.9.XXX).
 ! ===========================================================================
 terminal length 0
+terminal exec prompt timestamp
 !
 ! ---- L3 path to each node (does it even route, how many hops) ----
 ! Note: MPU5 mesh is L2-bridged, so these are same-subnet - expect 1 hop or
@@ -36,7 +37,7 @@ ping 172.17.9.7 repeat 200 timeout 1 size 64
 ! ---- Confirm .135 truly dead from THIS switch's vantage point ----
 ping 172.17.9.135 repeat 100 timeout 1 size 64
 !
-terminal length 0
+terminal no exec prompt timestamp
 ! ===========================================================================
 !  END PATH TRACE
 ! ===========================================================================
