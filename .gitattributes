@@ -2,5 +2,8 @@
 # Windows editors (Notepad) into MobaXterm/PuTTY SSH sessions.
 *.ios text eol=crlf
 
+# PowerShell scripts: keep CRLF (the Windows norm; PS 5.1/7 read either).
+*.ps1 text eol=crlf
+
 # Worksheet is binary; never apply text/eol filters to it.
 *.pdf binary

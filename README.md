@@ -41,6 +41,27 @@ settings. No config mode, no `write`, no `clear`, no `shutdown`, no `debug`.
 The only traffic generated is ICMP echo and traceroute probes. Nothing on any
 switch or the fabric is changed.
 
+## Offline PowerShell module stager
+
+`Stage-NetworkModules.ps1` — run on an **internet-connected** machine to
+download PowerShell troubleshooting modules (with dependencies) from the
+PowerShell Gallery into a folder you can copy to USB and sideload onto an
+offline / air-gapped server. It also drops `INSTALL_OFFLINE.txt` (step-by-step
+install notes) and `MANIFEST.txt` into the folder, and zips the lot.
+
+Modules staged by default (all open-source, all valid PSGallery IDs):
+`Posh-SSH` (SSH/SFTP automation — script the switch collection), `PoshSNMP`
+(native SNMP get/walk), and `PSNetAddressing` (subnet/CIDR math, IP target
+lists).
+
+```powershell
+.\Stage-NetworkModules.ps1                          # stage to .\OfflineModules
+.\Stage-NetworkModules.ps1 -OutPath D:\usb\PSModules # stage to a chosen path
+```
+
+Downloads files only — it does **not** install anything on the staging machine
+(uses `Save-Module`, current-user scope for the NuGet bootstrap).
+
 ### Validation
 
 These files were reviewed before being committed:
@@ -56,3 +77,16 @@ These files were reviewed before being committed:
   `terminal exec prompt none`, which is not a valid IOS/IOS-XE keyword (it would
   error and leave timestamps on). Corrected to `terminal no exec prompt
   timestamp`, the documented disable form.
+
+`Stage-NetworkModules.ps1` was validated separately (parsed with the PowerShell
+AST — 0 syntax errors — and run end-to-end). Three fixes were applied:
+
+- **Blank-manifest bug** — `Format-Table | Out-String` collapses to empty when
+  the console width is unset (`-1`), as in any non-interactive run (scheduled
+  task, CI, `-File`, piped output), so `MANIFEST.txt` and the summary came out
+  empty. Pinned to `Out-String -Width 4096` so they always render.
+- **`-OutPath` default** hardened to fall back to the current directory when
+  `$PSScriptRoot` is empty (e.g. dot-sourced / run as selected lines).
+- **`Save-Module`** now pins `-Repository PSGallery` to match the documented
+  intent. Module IDs (`Posh-SSH`, `PoshSNMP`, `PSNetAddressing`) confirmed
+  present on the Gallery.
