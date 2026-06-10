@@ -508,28 +508,33 @@ function renderTrending() {
 }
 
 function renderSuggestions() {
+  // Already-followed pals move to the Top Pals grid, so the list keeps
+  // advancing until every persona is addable — and eventually befriended.
   const suggestions = SEED.users
-    .filter((user) => user.id !== state.activeUserId && !user.isFounder && !user.isYou)
+    .filter(
+      (user) =>
+        user.id !== state.activeUserId &&
+        !user.isFounder &&
+        !user.isYou &&
+        !state.followedIds.includes(user.id)
+    )
     .sort((a, b) => b.followers - a.followers)
     .slice(0, 3);
-  const items = suggestions.map((user) => {
-    const following = state.followedIds.includes(user.id);
-    return el(
+  if (suggestions.length === 0) {
+    document.getElementById("suggestList").replaceChildren(
+      el("li", { class: "suggest-empty" }, "You've befriended the whole kitchen. 🏆")
+    );
+    return;
+  }
+  const items = suggestions.map((user) =>
+    el(
       "li",
       { class: "suggest-item" },
       avatar(user, "sm"),
       el("span", { class: "who" }, el("b", {}, user.name), el("span", {}, `${formatCount(user.followers)} followers`)),
-      el(
-        "button",
-        {
-          class: `follow-btn${following ? " following" : ""}`,
-          type: "button",
-          onclick: () => toggleFollow(user.id),
-        },
-        following ? "Pals ✓" : "Add pal"
-      )
-    );
-  });
+      el("button", { class: "follow-btn", type: "button", onclick: () => toggleFollow(user.id) }, "Add pal")
+    )
+  );
   document.getElementById("suggestList").replaceChildren(...items);
 }
 

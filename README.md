@@ -21,12 +21,16 @@ No build step, no dependencies, no backend — plain HTML, CSS, and JavaScript.
 
 ## Running locally
 
-Open `index.html` directly in a browser, or serve the folder:
+**Easiest:** double-click `PanPals.html` — a single self-contained file with all styles, scripts, and data inlined.
+
+Or open `index.html` directly in a browser, or serve the folder:
 
 ```bash
 python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
+
+After editing the source files, regenerate the single-file build with `node build-standalone.mjs`.
 
 ## Project structure
 

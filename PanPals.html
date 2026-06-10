@@ -1,0 +1,1808 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PanPals — Where Cookware Connects</title>
+  <meta name="description" content="The social network for pans and various dishware.">
+  <meta name="theme-color" content="#241d18">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #f8efe2;
+  --card: #fffdf9;
+  --ink: #2d241c;
+  --muted: #8a7a6b;
+  --accent: #c2571f;
+  --accent-2: #e98a3c;
+  --accent-deep: #9c4214;
+  --accent-soft: #f9e5d2;
+  --gold: #f5b14b;
+  --moon: #5b4a78;
+  --line: #eadfd2;
+  --header: #241d18;
+  --header-ink: #f6efe6;
+  --radius: 20px;
+  --shadow: 0 2px 6px rgba(45, 36, 28, 0.05), 0 14px 30px -22px rgba(45, 36, 28, 0.35);
+  --font-display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  /* Faint plates-and-pans wallpaper */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cg fill='none' stroke='%23c2571f' stroke-opacity='0.055' stroke-width='3'%3E%3Ccircle cx='42' cy='44' r='24'/%3E%3Ccircle cx='42' cy='44' r='13'/%3E%3Ccircle cx='138' cy='130' r='28'/%3E%3Ccircle cx='138' cy='130' r='16'/%3E%3Ccircle cx='132' cy='38' r='15'/%3E%3Cline x1='147' y1='38' x2='172' y2='38' stroke-linecap='round' stroke-width='5'/%3E%3Ccircle cx='38' cy='138' r='11'/%3E%3C/g%3E%3C/svg%3E");
+  color: var(--ink);
+  font: 15px/1.55 var(--font-body);
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, #2a211b 0%, #241d18 45%, #3a2317 100%);
+  color: var(--header-ink);
+  border-bottom: 1px solid rgba(233, 138, 60, 0.35);
+  box-shadow: 0 4px 18px rgba(36, 29, 24, 0.35);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+.logo {
+  background: none;
+  border: 0;
+  padding: 4px 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--header-ink);
+  white-space: nowrap;
+  transition: transform 0.15s ease;
+}
+
+.logo:hover {
+  transform: scale(1.04) rotate(-1deg);
+}
+
+.logo-pan {
+  display: inline-block;
+  filter: drop-shadow(0 0 6px rgba(233, 138, 60, 0.55));
+}
+
+.logo-text {
+  background: linear-gradient(120deg, #ffd9a0, #ff9a4d 45%, #ffb36b 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.search {
+  flex: 1;
+  max-width: 460px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(246, 239, 230, 0.13);
+  color: var(--header-ink);
+  font: inherit;
+  outline: none;
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.search::placeholder {
+  color: rgba(246, 239, 230, 0.55);
+}
+
+.search:focus {
+  background: rgba(246, 239, 230, 0.2);
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(233, 138, 60, 0.22);
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  font-weight: 700;
+}
+
+.topbar-user .handle {
+  color: rgba(246, 239, 230, 0.6);
+  font-weight: 400;
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 290px;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 24px auto;
+  padding: 0 16px;
+  align-items: start;
+}
+
+.sidebar {
+  display: grid;
+  gap: 20px;
+  position: sticky;
+  top: 86px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+/* ---------- Avatars ---------- */
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  color: #fff;
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 2px rgba(194, 87, 31, 0.45), 0 2px 6px rgba(45, 36, 28, 0.2);
+}
+
+.avatar-sm { width: 32px; height: 32px; font-size: 15px; }
+.avatar-md { width: 46px; height: 46px; font-size: 22px; }
+.avatar-lg { width: 72px; height: 72px; font-size: 36px; }
+
+/* ---------- Profile card ---------- */
+
+.profile-card {
+  text-align: center;
+  padding-top: 0;
+  overflow: hidden;
+}
+
+.profile-cover {
+  height: 76px;
+  margin: 0 -18px 0;
+  position: relative;
+}
+
+.profile-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.16' stroke-width='2.5'%3E%3Ccircle cx='24' cy='26' r='13'/%3E%3Ccircle cx='24' cy='26' r='6'/%3E%3Ccircle cx='68' cy='64' r='15'/%3E%3Ccircle cx='68' cy='64' r='7'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.profile-card .avatar-lg {
+  margin: -36px auto 10px;
+  position: relative;
+  z-index: 1;
+  border-width: 3px;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-handle {
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.profile-chip {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--accent-soft), #fcefdd);
+  border: 1px solid rgba(194, 87, 31, 0.25);
+  color: var(--accent-deep);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.profile-bio {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.profile-stats .stat {
+  display: grid;
+  line-height: 1.25;
+}
+
+.profile-stats .stat b {
+  font-size: 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.profile-stats .stat span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- Top Pals (MySpace rules) ---------- */
+
+.pals-block {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.pals-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.pals-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.pal-slot {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.pal-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pal-first {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--accent-deep);
+}
+
+.pal-slot.empty .circ {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.pal-slot.empty .pal-name {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.pals-note {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- Badges & chips ---------- */
+
+.badge {
+  display: inline-block;
+  vertical-align: 2px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--gold), #e98a3c);
+  color: #3a2410;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(58, 36, 16, 0.25);
+}
+
+.you-tag {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.pin-chip {
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(194, 87, 31, 0.3);
+  color: var(--accent-deep);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ---------- Persona switcher ---------- */
+
+.persona-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  text-align: left;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.persona-item:hover {
+  background: var(--accent-soft);
+  transform: translateX(2px);
+}
+
+.persona-item.persona-active {
+  background: linear-gradient(120deg, var(--accent-soft), #fcefdd);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+
+.persona-item .who {
+  display: grid;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.persona-item .who b {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.persona-item .who span {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Composer ---------- */
+
+.composer-row {
+  display: flex;
+  gap: 12px;
+}
+
+.composer-input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  resize: vertical;
+  min-height: 64px;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+.composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.composer-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.post-btn {
+  padding: 9px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px -4px rgba(194, 87, 31, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.post-btn:hover:not(:disabled) {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px -5px rgba(194, 87, 31, 0.7);
+}
+
+.post-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.post-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ---------- Welcome card ---------- */
+
+.welcome-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  background: linear-gradient(120deg, #f3eefa 0%, #fdf4e7 55%, #fcebd8 100%);
+  border: 1px solid rgba(91, 74, 120, 0.3);
+}
+
+.welcome-text {
+  flex: 1;
+  font-size: 14px;
+  min-width: 0;
+}
+
+.welcome-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--moon), #7a64a0);
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px -4px rgba(91, 74, 120, 0.7);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.welcome-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* ---------- Filter banner ---------- */
+
+.filter-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 10px 16px;
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius);
+  background: linear-gradient(120deg, var(--accent-soft), #fcefdd);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.filter-banner button {
+  border: 0;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 16px;
+  font-weight: 700;
+}
+
+/* ---------- Posts ---------- */
+
+.post {
+  margin-top: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(45, 36, 28, 0.07), 0 20px 38px -24px rgba(45, 36, 28, 0.45);
+}
+
+.post.fresh {
+  animation: rise-in 0.4s ease both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+.post-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.post-meta {
+  display: grid;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.post-name {
+  font-weight: 800;
+}
+
+.post-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.post-body {
+  margin: 12px 0 4px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.hashtag,
+.mention {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-weight: 800;
+}
+
+.hashtag {
+  color: var(--accent);
+}
+
+.mention {
+  color: var(--moon);
+}
+
+.hashtag:hover,
+.mention:hover {
+  text-decoration: underline;
+}
+
+.post-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: var(--muted);
+  font-weight: 700;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.action-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+
+.action-btn:active {
+  transform: scale(0.94);
+}
+
+.action-btn.seared {
+  background: linear-gradient(120deg, var(--accent-soft), #fde3c8);
+  color: var(--accent-deep);
+  box-shadow: inset 0 0 0 1px rgba(194, 87, 31, 0.35);
+}
+
+.action-btn.pop {
+  animation: sear-pop 0.45s ease;
+}
+
+@keyframes sear-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.28) rotate(-7deg); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Comments ---------- */
+
+.comments {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 10px;
+}
+
+.comment {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.comment-body {
+  background: var(--bg);
+  border-radius: 14px;
+  padding: 8px 12px;
+  min-width: 0;
+}
+
+.comment-body b {
+  font-size: 13px;
+}
+
+.comment-body .when {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.comment-body p {
+  margin: 2px 0 0;
+  font-size: 14px;
+  overflow-wrap: break-word;
+}
+
+.comment-composer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font: inherit;
+  background: var(--bg);
+  outline: none;
+  min-width: 0;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.comment-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(194, 87, 31, 0.15);
+}
+
+.reply-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 16px;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #fff;
+  font-weight: 700;
+  transition: filter 0.15s ease;
+}
+
+.reply-btn:hover {
+  filter: brightness(1.07);
+}
+
+/* ---------- Right rail ---------- */
+
+.trend-item,
+.suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+}
+
+.trend-rank {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 2px 6px -2px rgba(194, 87, 31, 0.6);
+}
+
+.trend-item button.tag {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trend-item button.tag:hover {
+  text-decoration: underline;
+}
+
+.trend-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.suggest-empty {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 6px 0;
+}
+
+.suggest-item .who {
+  display: grid;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.suggest-item .who b {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggest-item .who span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.follow-btn {
+  margin-left: auto;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  background: none;
+  color: var(--accent-deep);
+  padding: 4px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.follow-btn:hover {
+  background: var(--accent-soft);
+}
+
+.follow-btn:active {
+  transform: scale(0.95);
+}
+
+.follow-btn.following {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  border-color: transparent;
+  color: #fff;
+}
+
+.sidebar-footer {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.sidebar-footer p {
+  margin: 0 0 8px;
+}
+
+.reset-btn {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  padding: 5px 14px;
+  font-size: 12px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.reset-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+
+/* ---------- Empty state ---------- */
+
+.empty-state {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--muted);
+  padding: 40px 18px;
+}
+
+.empty-state .big {
+  font-size: 44px;
+  margin-bottom: 8px;
+  animation: plate-bounce 1.6s ease infinite;
+}
+
+@keyframes plate-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1020px) {
+  .layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+  }
+  .sidebar-right {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar {
+    position: static;
+  }
+  .sidebar-left {
+    order: 2;
+  }
+  .feed-col {
+    order: 1;
+  }
+  .search {
+    max-width: none;
+  }
+  .topbar-user .who-text {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="logo" id="logo" type="button" title="Back to the full feed"><span class="logo-pan">🍳</span> <span class="logo-text">PanPals</span></button>
+      <input class="search" id="search" type="search" placeholder="Search sizzles, #hashtags, pals…" aria-label="Search">
+      <div class="topbar-user" id="topbarUser"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar sidebar-left">
+      <section class="card profile-card" id="profileCard" aria-label="Your profile"></section>
+      <section class="card persona-card">
+        <h2>Post as…</h2>
+        <ul class="persona-list" id="personaList"></ul>
+      </section>
+    </aside>
+
+    <section class="feed-col">
+      <section class="card composer">
+        <div class="composer-row">
+          <span id="composerAvatar"></span>
+          <textarea class="composer-input" id="composerInput" rows="3" maxlength="280"></textarea>
+        </div>
+        <div class="composer-actions">
+          <span class="composer-hint">280 chars max. Keep it sizzling.</span>
+          <button class="post-btn" id="postBtn" type="button" disabled>Sizzle it</button>
+        </div>
+      </section>
+      <div class="filter-banner" id="filterBanner" hidden></div>
+      <div id="feed" aria-live="polite"></div>
+    </section>
+
+    <aside class="sidebar sidebar-right">
+      <section class="card">
+        <h2>Sizzling Topics</h2>
+        <ul class="trend-list" id="trendingList"></ul>
+      </section>
+      <section class="card">
+        <h2>Pals you may know</h2>
+        <ul class="suggest-list" id="suggestList"></ul>
+      </section>
+      <footer class="sidebar-footer">
+        <p>PanPals demo — your posts live in this browser.</p>
+        <button class="reset-btn" id="resetBtn" type="button">Reset demo data</button>
+      </footer>
+    </aside>
+  </main>
+
+  <script>
+"use strict";
+
+// Seed content for the PanPals demo. Loaded before app.js, which copies it
+// into localStorage on first visit (timestamps are materialized from
+// minutesAgo at seed time).
+//
+// Special users:
+//   - "you"  — the prebaked profile you start on (a pan, naturally)
+//   - "vexx" — the founder. Everyone is friends with Vexx, MySpace-Tom style.
+const SEED = {
+  users: [
+    {
+      id: "you",
+      name: "Pat the Pan",
+      firstName: "Pat",
+      handle: "panpat",
+      emoji: "🍳",
+      color: "#e0762e",
+      type: "All-Purpose Frying Pan",
+      bio: "Fresh out of the box. Nonstick, non-judgmental, ready to make pals.",
+      followers: 1,
+      following: 1,
+      isYou: true,
+    },
+    {
+      id: "vexx",
+      name: "Vexx WereWolf",
+      firstName: "Vexx",
+      handle: "vexxwerewolf",
+      emoji: "🐺",
+      color: "#5b4a78",
+      type: "Founder of PanPals",
+      badge: "🌕 Founder",
+      bio: "Everyone's first pal — yes, even the gravy boat's. I howl at every full plate.",
+      followers: 2400000,
+      following: 2400000,
+      isFounder: true,
+    },
+    {
+      id: "carl",
+      name: "Cast Iron Carl",
+      handle: "castironcarl",
+      emoji: "🍳",
+      color: "#3f3a36",
+      type: "Cast Iron Skillet",
+      bio: "Seasoned since 1987. Low and slow is a lifestyle. Soap is a slur.",
+      followers: 48200,
+      following: 8,
+    },
+    {
+      id: "fiona",
+      name: "Fine China Fiona",
+      handle: "finechinafiona",
+      emoji: "🍽️",
+      color: "#7c93c4",
+      type: "Bone China Dinner Set",
+      bio: "Hand wash only. Special occasions only. Emotionally available twice a year.",
+      followers: 31400,
+      following: 12,
+    },
+    {
+      id: "nancy",
+      name: "Nonstick Nancy",
+      handle: "nonsticknancy",
+      emoji: "🥞",
+      color: "#d2738a",
+      type: "Nonstick Frying Pan",
+      bio: "Nothing sticks to me — especially drama. Wooden spoons only, please.",
+      followers: 23100,
+      following: 45,
+    },
+    {
+      id: "wendy",
+      name: "Wok Wendy",
+      handle: "wokwendy",
+      emoji: "🥘",
+      color: "#b3541e",
+      type: "Carbon Steel Wok",
+      bio: "High heat, fast friends. Professional vegetable tosser.",
+      followers: 18700,
+      following: 64,
+    },
+    {
+      id: "tina",
+      name: "Teacup Tina",
+      handle: "teacuptina",
+      emoji: "🍵",
+      color: "#4e8d7c",
+      type: "Porcelain Teacup",
+      bio: "Storm in progress. I hold exactly one serving of opinions at a time.",
+      followers: 12900,
+      following: 203,
+    },
+    {
+      id: "colin",
+      name: "Colander Colin",
+      handle: "colandercolin",
+      emoji: "🍝",
+      color: "#8a9a5b",
+      type: "Stainless Colander",
+      bio: "I have a lot of holes in my arguments. It's by design.",
+      followers: 9800,
+      following: 87,
+    },
+    {
+      id: "gary",
+      name: "Gravy Boat Gary",
+      handle: "gravyboatgary",
+      emoji: "⛵",
+      color: "#8c6239",
+      type: "Ceramic Gravy Boat",
+      bio: "Sailing the seas of Sunday roast. Seasonal worker, year-round dreamer.",
+      followers: 8400,
+      following: 19,
+    },
+    {
+      id: "sam",
+      name: "Saucepan Sam",
+      handle: "saucepansam",
+      emoji: "🍲",
+      color: "#c98a2d",
+      type: "Stainless Saucepan",
+      bio: "Simmering thoughts daily. Patience makes the sauce.",
+      followers: 7600,
+      following: 31,
+    },
+  ],
+
+  posts: [
+    {
+      id: "seed-1",
+      userId: "you",
+      minutesAgo: 3,
+      text: "Hi everyone! Fresh out of the box and ready to sizzle. Vexx friended me before I even finished signing up?? Nicest werewolf I've ever met. #NewPan #DayOne",
+      sears: 7,
+      comments: [
+        { userId: "vexx", minutesAgo: 2, text: "Welcome to the family, Pat! Howl if you need anything. 🌕" },
+        { userId: "nancy", minutesAgo: 1, text: "Welcome bb! Pro tip: never let them stack you." },
+      ],
+    },
+    {
+      id: "seed-2",
+      userId: "vexx",
+      minutesAgo: 5,
+      pinned: true,
+      text: "Welcome to PanPals, @panpat! 🌕 I'm Vexx — everyone's first pal here. Don't mind the fur in the cutlery drawer. Make yourself at home. #Welcome #FirstPal",
+      sears: 1042,
+      comments: [
+        { userId: "gary", minutesAgo: 4, text: "He friended me before I was even glazed. A gentleman." },
+      ],
+    },
+    {
+      id: "seed-3",
+      userId: "tina",
+      minutesAgo: 8,
+      text: "About to spill some EXTREMELY hot tea about what the microwave said to the mug last night. Thread incoming. 🫖 #SpillingTheTea",
+      sears: 23,
+      comments: [
+        { userId: "gary", minutesAgo: 3, text: "Pour it. Slowly. Like gravy." },
+      ],
+    },
+    {
+      id: "seed-4",
+      userId: "nancy",
+      minutesAgo: 27,
+      text: "PSA: metal utensils are a form of violence. Wooden spoons or we're done. 💅 #NonstickLife #TeflonTalk",
+      sears: 89,
+      comments: [
+        { userId: "carl", minutesAgo: 20, text: "Try being scrubbed with steel wool for thirty years and then talk to me about trauma." },
+      ],
+    },
+    {
+      id: "seed-5",
+      userId: "carl",
+      minutesAgo: 65,
+      text: "Someone in this house washed me WITH SOAP. Thirty-seven years of seasoning. Gone. I am unrecognizable to myself. #CastIronCare #NeverForget",
+      sears: 412,
+      comments: [
+        { userId: "wendy", minutesAgo: 50, text: "Stay strong Carl. Re-season and rise. 🔥" },
+        { userId: "fiona", minutesAgo: 41, text: "I simply cannot imagine being washed more than twice a year." },
+      ],
+    },
+    {
+      id: "seed-6",
+      userId: "gary",
+      minutesAgo: 130,
+      text: "They only take me out of the cabinet twice a year, but I refuse to be bitter. I'm savory. #GravyGang #HolidayCrew",
+      sears: 156,
+      comments: [
+        { userId: "tina", minutesAgo: 110, text: "Twice?? Look at Mr. Popular over here." },
+      ],
+    },
+    {
+      id: "seed-7",
+      userId: "wendy",
+      minutesAgo: 190,
+      text: "Got tossed 47 times during dinner service and didn't lose a single snap pea. Core strength, people. #WokThisWay #HighHeatHighStandards",
+      sears: 203,
+      comments: [],
+    },
+    {
+      id: "seed-8",
+      userId: "colin",
+      minutesAgo: 300,
+      text: "My therapist says I let too many things slip through. I told her that is literally my entire job description. #Drained #HoleisticHealing",
+      sears: 178,
+      comments: [
+        { userId: "sam", minutesAgo: 280, text: "You cannot keep making this joke every week." },
+        { userId: "colin", minutesAgo: 275, text: "Watch me." },
+      ],
+    },
+    {
+      id: "seed-9",
+      userId: "fiona",
+      minutesAgo: 420,
+      text: "Got taken out of the cabinet for a Tuesday dinner. A TUESDAY. Is nothing sacred anymore?? #FineChinaProblems",
+      sears: 96,
+      comments: [
+        { userId: "nancy", minutesAgo: 400, text: "Girl, some of us work every single day." },
+      ],
+    },
+    {
+      id: "seed-10",
+      userId: "sam",
+      minutesAgo: 540,
+      text: "Simmer down everyone, it's reduction season. Patience makes the sauce. #SauceLife #SlowAndSteady",
+      sears: 64,
+      comments: [],
+    },
+    {
+      id: "seed-11",
+      userId: "vexx",
+      minutesAgo: 720,
+      text: "Reminder from your first pal: hand-wash your friendships and your fine china — both crack under pressure. 🌕 #VexxWisdom",
+      sears: 999,
+      comments: [
+        { userId: "fiona", minutesAgo: 700, text: "Finally, someone who understands me." },
+      ],
+    },
+    {
+      id: "seed-12",
+      userId: "carl",
+      minutesAgo: 1560,
+      text: "Daily reminder: low and slow. In cooking and in life. #CastIronCare #SkilletWisdom",
+      sears: 251,
+      comments: [
+        { userId: "tina", minutesAgo: 1500, text: "Needed this today 🍵" },
+      ],
+    },
+  ],
+};
+</script>
+  <script>
+"use strict";
+
+const STORAGE_KEY = "panpals-state-v2";
+const TOKEN_RE = /[#@][A-Za-z0-9_]+/g;
+const HASHTAG_RE = /#[A-Za-z0-9_]+/g;
+const TOP_PALS_SLOTS = 8;
+
+const usersById = Object.fromEntries(SEED.users.map((u) => [u.id, u]));
+
+// ---------- State ----------
+
+function seedState() {
+  const now = Date.now();
+  return {
+    activeUserId: "you",
+    // MySpace rules: Vexx is everyone's first pal. No exceptions. 🌕
+    followedIds: ["vexx"],
+    welcomeDismissed: false,
+    posts: SEED.posts.map((p) => ({
+      id: p.id,
+      userId: p.userId,
+      text: p.text,
+      ts: now - p.minutesAgo * 60000,
+      pinned: p.pinned ?? false,
+      sears: p.sears,
+      searedByMe: false,
+      comments: p.comments.map((c) => ({
+        userId: c.userId,
+        text: c.text,
+        ts: now - c.minutesAgo * 60000,
+      })),
+    })),
+  };
+}
+
+function loadState() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (parsed && Array.isArray(parsed.posts) && usersById[parsed.activeUserId]) {
+      parsed.followedIds = Array.isArray(parsed.followedIds) ? parsed.followedIds : ["vexx"];
+      if (!parsed.followedIds.includes("vexx")) parsed.followedIds.unshift("vexx");
+      return parsed;
+    }
+  } catch {
+    // Corrupt or legacy state: fall through and reseed.
+  }
+  return seedState();
+}
+
+let state = loadState();
+let hashtagFilter = null;
+let searchQuery = "";
+const expandedPosts = new Set();
+let searPulseId = null; // post whose sear button should pop on next render
+let freshPostId = null; // post that should slide in on next render
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function activeUser() {
+  return usersById[state.activeUserId];
+}
+
+// ---------- DOM helpers ----------
+
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(attrs)) {
+    if (value == null || value === false) continue;
+    if (key === "class") node.className = value;
+    else if (key.startsWith("on")) node.addEventListener(key.slice(2), value);
+    else if (value === true) node.setAttribute(key, "");
+    else node.setAttribute(key, value);
+  }
+  for (const child of children.flat(Infinity)) {
+    if (child == null) continue;
+    node.append(child.nodeType ? child : document.createTextNode(child));
+  }
+  return node;
+}
+
+function avatar(user, size = "md") {
+  return el(
+    "span",
+    { class: `avatar avatar-${size}`, style: `background:${user.color}`, title: user.name },
+    user.emoji
+  );
+}
+
+// Name plus any badge ("🌕 Founder") and the "(you)" tag.
+function nameBits(user) {
+  const bits = [user.name];
+  if (user.badge) bits.push(" ", el("span", { class: "badge" }, user.badge));
+  if (user.isYou) bits.push(" ", el("span", { class: "you-tag" }, "(you)"));
+  return bits;
+}
+
+// Renders post text as DOM nodes (never innerHTML) with clickable
+// #hashtags and @mentions.
+function richText(text) {
+  const frag = document.createDocumentFragment();
+  let last = 0;
+  for (const match of text.matchAll(TOKEN_RE)) {
+    frag.append(text.slice(last, match.index));
+    const token = match[0];
+    if (token.startsWith("#")) {
+      frag.append(el("button", { class: "hashtag", type: "button", onclick: () => setHashtagFilter(token) }, token));
+    } else {
+      frag.append(el("button", { class: "mention", type: "button", onclick: () => searchFor(token) }, token));
+    }
+    last = match.index + token.length;
+  }
+  frag.append(text.slice(last));
+  return frag;
+}
+
+function timeAgo(ts) {
+  const mins = Math.max(1, Math.round((Date.now() - ts) / 60000));
+  if (mins < 60) return `${mins}m`;
+  const hours = Math.round(mins / 60);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.round(hours / 24)}d`;
+}
+
+function formatCount(n) {
+  if (n >= 1e6) return `${Math.round(n / 1e5) / 10}M`;
+  if (n >= 1000) return `${Math.round(n / 100) / 10}k`;
+  return `${n}`;
+}
+
+function firstName(user) {
+  return user.firstName ?? user.name.split(" ").at(-1);
+}
+
+// ---------- Filtering ----------
+
+function postTags(text) {
+  return (text.match(HASHTAG_RE) ?? []).map((t) => t.toLowerCase());
+}
+
+function visiblePosts() {
+  const list = state.posts.filter((post) => {
+    if (hashtagFilter && !postTags(post.text).includes(hashtagFilter.toLowerCase())) return false;
+    if (searchQuery) {
+      const user = usersById[post.userId];
+      const haystack = `${post.text} ${user.name} @${user.handle}`.toLowerCase();
+      if (!haystack.includes(searchQuery)) return false;
+    }
+    return true;
+  });
+  // Founder's welcome stays pinned to the top, MySpace-Tom style.
+  return list.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+}
+
+function setHashtagFilter(tag) {
+  hashtagFilter = tag;
+  renderFilterBanner();
+  renderFeed();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function searchFor(query) {
+  document.getElementById("search").value = query;
+  searchQuery = query.toLowerCase();
+  renderFeed();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function clearFilters() {
+  hashtagFilter = null;
+  searchQuery = "";
+  document.getElementById("search").value = "";
+  renderFilterBanner();
+  renderFeed();
+}
+
+// ---------- Actions ----------
+
+function switchPersona(userId) {
+  state.activeUserId = userId;
+  save();
+  renderAll();
+}
+
+function submitPost() {
+  const input = document.getElementById("composerInput");
+  const text = input.value.trim();
+  if (!text) return;
+  const post = {
+    id: `post-${Date.now()}`,
+    userId: state.activeUserId,
+    text,
+    ts: Date.now(),
+    pinned: false,
+    sears: 0,
+    searedByMe: false,
+    comments: [],
+  };
+  state.posts.unshift(post);
+  freshPostId = post.id;
+  input.value = "";
+  document.getElementById("postBtn").disabled = true;
+  save();
+  renderAll();
+}
+
+function toggleSear(post) {
+  post.searedByMe = !post.searedByMe;
+  post.sears += post.searedByMe ? 1 : -1;
+  if (post.searedByMe) searPulseId = post.id;
+  save();
+  renderFeed();
+}
+
+function addComment(post, inputEl) {
+  const text = inputEl.value.trim();
+  if (!text) return;
+  post.comments.push({ userId: state.activeUserId, text, ts: Date.now() });
+  expandedPosts.add(post.id);
+  save();
+  renderFeed();
+}
+
+function toggleFollow(userId) {
+  const idx = state.followedIds.indexOf(userId);
+  if (idx === -1) state.followedIds.push(userId);
+  else state.followedIds.splice(idx, 1);
+  save();
+  renderSuggestions();
+  renderProfile(); // Top Pals grid lives on the profile card
+}
+
+function dismissWelcome() {
+  state.welcomeDismissed = true;
+  save();
+  renderFeed();
+}
+
+// ---------- Rendering ----------
+
+function renderTopbar() {
+  const user = activeUser();
+  document.getElementById("topbarUser").replaceChildren(
+    avatar(user, "sm"),
+    el("span", { class: "who-text" }, el("b", {}, nameBits(user)), " ", el("span", { class: "handle" }, `@${user.handle}`))
+  );
+}
+
+function topPals() {
+  const ids = ["vexx", ...state.followedIds.filter((id) => id !== "vexx")];
+  return ids.slice(0, TOP_PALS_SLOTS).map((id) => usersById[id]).filter(Boolean);
+}
+
+function palsGrid() {
+  const pals = topPals();
+  const slots = pals.map((pal, i) =>
+    el(
+      "div",
+      { class: "pal-slot", title: pal.isFounder ? "Vexx is everyone's first pal" : pal.name },
+      avatar(pal, "sm"),
+      el("span", { class: "pal-name" }, firstName(pal)),
+      i === 0 ? el("span", { class: "pal-first" }, "1st 💘") : null
+    )
+  );
+  for (let i = pals.length; i < TOP_PALS_SLOTS; i++) {
+    slots.push(
+      el(
+        "div",
+        { class: "pal-slot empty", title: "Follow pals to fill your Top 8" },
+        el("span", { class: "circ" }, "+"),
+        el("span", { class: "pal-name" }, "open")
+      )
+    );
+  }
+  return el(
+    "div",
+    { class: "pals-block" },
+    el("h3", { class: "pals-title" }, "Top Pals"),
+    el("div", { class: "pals-grid" }, slots),
+    el("p", { class: "pals-note" }, "Vexx is everyone's first pal. House rules. 🌕")
+  );
+}
+
+function renderProfile() {
+  const user = activeUser();
+  const sizzleCount = state.posts.filter((p) => p.userId === user.id).length;
+  const stats = user.isYou
+    ? [
+        [String(sizzleCount), "Sizzles"],
+        [String(state.followedIds.length), "Pals"],
+        [formatCount(user.followers), "Followers"],
+      ]
+    : [
+        [String(sizzleCount), "Sizzles"],
+        [formatCount(user.followers), "Followers"],
+        [formatCount(user.following), "Following"],
+      ];
+  document.getElementById("profileCard").replaceChildren(
+    el("div", { class: "profile-cover", style: `background:linear-gradient(120deg, ${user.color}, #c2571f)` }),
+    avatar(user, "lg"),
+    el("div", { class: "profile-name" }, nameBits(user)),
+    el("div", { class: "profile-handle" }, `@${user.handle}`),
+    el("div", {}, el("span", { class: "profile-chip" }, user.type)),
+    el("p", { class: "profile-bio" }, user.bio),
+    el(
+      "div",
+      { class: "profile-stats" },
+      stats.map(([value, label]) =>
+        el("span", { class: "stat" }, el("b", {}, value), el("span", {}, label))
+      )
+    ),
+    user.isYou ? palsGrid() : null
+  );
+}
+
+function renderPersonas() {
+  const items = SEED.users
+    .filter((user) => !user.isFounder) // nobody gets to BE Vexx
+    .map((user) =>
+      el(
+        "li",
+        {},
+        el(
+          "button",
+          {
+            class: `persona-item${user.id === state.activeUserId ? " persona-active" : ""}`,
+            type: "button",
+            onclick: () => switchPersona(user.id),
+          },
+          avatar(user, "sm"),
+          el("span", { class: "who" }, el("b", {}, nameBits(user)), el("span", {}, user.type))
+        )
+      )
+    );
+  document.getElementById("personaList").replaceChildren(...items);
+}
+
+function renderComposer() {
+  const user = activeUser();
+  document.getElementById("composerAvatar").replaceChildren(avatar(user, "md"));
+  document.getElementById("composerInput").placeholder = `What's sizzling, ${firstName(user)}?`;
+}
+
+function renderFilterBanner() {
+  const banner = document.getElementById("filterBanner");
+  if (!hashtagFilter) {
+    banner.hidden = true;
+    banner.replaceChildren();
+    return;
+  }
+  banner.hidden = false;
+  banner.replaceChildren(
+    el("span", {}, `Showing sizzles tagged ${hashtagFilter}`),
+    el("button", { type: "button", onclick: clearFilters }, "Clear")
+  );
+}
+
+function welcomeCard() {
+  const vexx = usersById.vexx;
+  return el(
+    "div",
+    { class: "card welcome-card" },
+    avatar(vexx, "md"),
+    el(
+      "div",
+      { class: "welcome-text" },
+      el("b", {}, "Vexx WereWolf is now your pal! "),
+      "Everyone on PanPals starts with one friend — the founder. Welcome aboard. 🌕"
+    ),
+    el("button", { class: "welcome-btn", type: "button", onclick: dismissWelcome }, "Thanks, Vexx 💘")
+  );
+}
+
+function commentRow(comment) {
+  const user = usersById[comment.userId];
+  return el(
+    "div",
+    { class: "comment" },
+    avatar(user, "sm"),
+    el(
+      "div",
+      { class: "comment-body" },
+      el("b", {}, nameBits(user), " ", el("span", { class: "when" }, `· ${timeAgo(comment.ts)}`)),
+      el("p", {}, comment.text)
+    )
+  );
+}
+
+function commentsBlock(post) {
+  const input = el("input", {
+    class: "comment-input",
+    type: "text",
+    maxlength: "280",
+    placeholder: `Reply as ${firstName(activeUser())}…`,
+    onkeydown: (event) => {
+      if (event.key === "Enter") addComment(post, input);
+    },
+  });
+  return el(
+    "div",
+    { class: "comments" },
+    post.comments.map(commentRow),
+    el(
+      "div",
+      { class: "comment-composer" },
+      avatar(activeUser(), "sm"),
+      input,
+      el("button", { class: "reply-btn", type: "button", onclick: () => addComment(post, input) }, "Reply")
+    )
+  );
+}
+
+function postCard(post) {
+  const user = usersById[post.userId];
+  const expanded = expandedPosts.has(post.id);
+  return el(
+    "article",
+    { class: `card post${post.id === freshPostId ? " fresh" : ""}` },
+    el(
+      "header",
+      { class: "post-header" },
+      avatar(user, "md"),
+      el(
+        "div",
+        { class: "post-meta" },
+        el("span", { class: "post-name" }, nameBits(user)),
+        el("span", { class: "post-sub" }, `@${user.handle} · ${timeAgo(post.ts)}`)
+      ),
+      post.pinned ? el("span", { class: "pin-chip" }, "📌 Pinned") : null
+    ),
+    el("div", { class: "post-body" }, richText(post.text)),
+    el(
+      "div",
+      { class: "post-actions" },
+      el(
+        "button",
+        {
+          class: `action-btn${post.searedByMe ? " seared" : ""}${post.id === searPulseId ? " pop" : ""}`,
+          type: "button",
+          title: "Sear this sizzle",
+          onclick: () => toggleSear(post),
+        },
+        `🔥 ${post.sears}`
+      ),
+      el(
+        "button",
+        {
+          class: "action-btn",
+          type: "button",
+          title: "Show replies",
+          onclick: () => {
+            if (expandedPosts.has(post.id)) expandedPosts.delete(post.id);
+            else expandedPosts.add(post.id);
+            renderFeed();
+          },
+        },
+        `💬 ${post.comments.length}`
+      )
+    ),
+    expanded ? commentsBlock(post) : null
+  );
+}
+
+function renderFeed() {
+  const feed = document.getElementById("feed");
+  const nodes = [];
+  if (!state.welcomeDismissed) nodes.push(welcomeCard());
+  const posts = visiblePosts();
+  if (posts.length === 0) {
+    nodes.push(
+      el(
+        "div",
+        { class: "card empty-state" },
+        el("div", { class: "big" }, "🍽️"),
+        el("div", {}, "Nothing on the menu. Try clearing your search or filter.")
+      )
+    );
+  } else {
+    nodes.push(...posts.map(postCard));
+  }
+  feed.replaceChildren(...nodes);
+  searPulseId = null;
+  freshPostId = null;
+}
+
+function renderTrending() {
+  const counts = new Map();
+  for (const post of state.posts) {
+    for (const tag of post.text.match(HASHTAG_RE) ?? []) {
+      const key = tag.toLowerCase();
+      const entry = counts.get(key) ?? { display: tag, count: 0 };
+      entry.count += 1;
+      counts.set(key, entry);
+    }
+  }
+  const top = [...counts.values()].sort((a, b) => b.count - a.count || a.display.localeCompare(b.display)).slice(0, 5);
+  const items = top.map(({ display, count }, i) =>
+    el(
+      "li",
+      { class: "trend-item" },
+      el("span", { class: "trend-rank" }, `${i + 1}`),
+      el("button", { class: "tag", type: "button", onclick: () => setHashtagFilter(display) }, display),
+      el("span", { class: "trend-count" }, `${count} ${count === 1 ? "sizzle" : "sizzles"}`)
+    )
+  );
+  document.getElementById("trendingList").replaceChildren(...items);
+}
+
+function renderSuggestions() {
+  // Already-followed pals move to the Top Pals grid, so the list keeps
+  // advancing until every persona is addable — and eventually befriended.
+  const suggestions = SEED.users
+    .filter(
+      (user) =>
+        user.id !== state.activeUserId &&
+        !user.isFounder &&
+        !user.isYou &&
+        !state.followedIds.includes(user.id)
+    )
+    .sort((a, b) => b.followers - a.followers)
+    .slice(0, 3);
+  if (suggestions.length === 0) {
+    document.getElementById("suggestList").replaceChildren(
+      el("li", { class: "suggest-empty" }, "You've befriended the whole kitchen. 🏆")
+    );
+    return;
+  }
+  const items = suggestions.map((user) =>
+    el(
+      "li",
+      { class: "suggest-item" },
+      avatar(user, "sm"),
+      el("span", { class: "who" }, el("b", {}, user.name), el("span", {}, `${formatCount(user.followers)} followers`)),
+      el("button", { class: "follow-btn", type: "button", onclick: () => toggleFollow(user.id) }, "Add pal")
+    )
+  );
+  document.getElementById("suggestList").replaceChildren(...items);
+}
+
+function renderAll() {
+  renderTopbar();
+  renderProfile();
+  renderPersonas();
+  renderComposer();
+  renderFilterBanner();
+  renderTrending();
+  renderSuggestions();
+  renderFeed();
+}
+
+// ---------- Init ----------
+
+function init() {
+  document.getElementById("logo").addEventListener("click", clearFilters);
+
+  document.getElementById("search").addEventListener("input", (event) => {
+    searchQuery = event.target.value.trim().toLowerCase();
+    renderFeed();
+  });
+
+  const composerInput = document.getElementById("composerInput");
+  const postBtn = document.getElementById("postBtn");
+  composerInput.addEventListener("input", () => {
+    postBtn.disabled = !composerInput.value.trim();
+  });
+  composerInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) submitPost();
+  });
+  postBtn.addEventListener("click", submitPost);
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    if (!confirm("Reset PanPals demo data? Your posts and sears will be lost.")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  renderAll();
+}
+
+init();
+</script>
+</body>
+</html>

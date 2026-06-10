@@ -777,6 +777,12 @@ button {
   white-space: nowrap;
 }
 
+.suggest-empty {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 6px 0;
+}
+
 .suggest-item .who {
   display: grid;
   line-height: 1.3;
