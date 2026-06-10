@@ -10,6 +10,13 @@ venv/
 *.db
 .env
 
+# Android
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/
+android/.kotlin/
+
 # Editors / OS
 .vscode/
 .idea/

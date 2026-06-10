@@ -39,6 +39,31 @@ uvicorn app.main:app --reload
 Open <http://localhost:8000>, paste a text or drop a screenshot, and hit
 **Extract events & tasks**.
 
+## Android app 📱
+
+A native Android client (Kotlin + Jetpack Compose) lives in [`android/`](android/) — the
+same extraction brain, plus two things only a phone can do:
+
+- **Share-to-SnapCal** — screenshot a conversation, hit share, pick SnapCal. Text and images
+  shared from any app land straight in the Capture screen.
+- **Straight into your real calendar** — extracted events open pre-filled in Google
+  Calendar (or your default calendar app) via the system insert intent, no permissions needed.
+
+It is fully standalone — no server required. Paste your Anthropic API key into the app's
+Settings screen (stored in the app's private storage); confirmed items live on-device.
+
+### Build & install
+
+Open `android/` in Android Studio and press Run, or from the CLI:
+
+```bash
+cd android && ./gradlew assembleDebug
+# APK: app/build/outputs/apk/debug/app-debug.apk
+```
+
+Every CI run also uploads a ready-to-install debug APK as the **snapcal-debug-apk**
+artifact (Actions → run → Artifacts).
+
 ## How it works
 
 ```
