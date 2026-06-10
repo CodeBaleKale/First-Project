@@ -3,8 +3,39 @@
 // Seed content for the PanPals demo. Loaded before app.js, which copies it
 // into localStorage on first visit (timestamps are materialized from
 // minutesAgo at seed time).
+//
+// Special users:
+//   - "you"  — the prebaked profile you start on (a pan, naturally)
+//   - "vexx" — the founder. Everyone is friends with Vexx, MySpace-Tom style.
 const SEED = {
   users: [
+    {
+      id: "you",
+      name: "Pat the Pan",
+      firstName: "Pat",
+      handle: "panpat",
+      emoji: "🍳",
+      color: "#e0762e",
+      type: "All-Purpose Frying Pan",
+      bio: "Fresh out of the box. Nonstick, non-judgmental, ready to make pals.",
+      followers: 1,
+      following: 1,
+      isYou: true,
+    },
+    {
+      id: "vexx",
+      name: "Vexx WereWolf",
+      firstName: "Vexx",
+      handle: "vexxwerewolf",
+      emoji: "🐺",
+      color: "#5b4a78",
+      type: "Founder of PanPals",
+      badge: "🌕 Founder",
+      bio: "Everyone's first pal — yes, even the gravy boat's. I howl at every full plate.",
+      followers: 2400000,
+      following: 2400000,
+      isFounder: true,
+    },
     {
       id: "carl",
       name: "Cast Iron Carl",
@@ -98,6 +129,28 @@ const SEED = {
   posts: [
     {
       id: "seed-1",
+      userId: "you",
+      minutesAgo: 3,
+      text: "Hi everyone! Fresh out of the box and ready to sizzle. Vexx friended me before I even finished signing up?? Nicest werewolf I've ever met. #NewPan #DayOne",
+      sears: 7,
+      comments: [
+        { userId: "vexx", minutesAgo: 2, text: "Welcome to the family, Pat! Howl if you need anything. 🌕" },
+        { userId: "nancy", minutesAgo: 1, text: "Welcome bb! Pro tip: never let them stack you." },
+      ],
+    },
+    {
+      id: "seed-2",
+      userId: "vexx",
+      minutesAgo: 5,
+      pinned: true,
+      text: "Welcome to PanPals, @panpat! 🌕 I'm Vexx — everyone's first pal here. Don't mind the fur in the cutlery drawer. Make yourself at home. #Welcome #FirstPal",
+      sears: 1042,
+      comments: [
+        { userId: "gary", minutesAgo: 4, text: "He friended me before I was even glazed. A gentleman." },
+      ],
+    },
+    {
+      id: "seed-3",
       userId: "tina",
       minutesAgo: 8,
       text: "About to spill some EXTREMELY hot tea about what the microwave said to the mug last night. Thread incoming. 🫖 #SpillingTheTea",
@@ -107,7 +160,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-2",
+      id: "seed-4",
       userId: "nancy",
       minutesAgo: 27,
       text: "PSA: metal utensils are a form of violence. Wooden spoons or we're done. 💅 #NonstickLife #TeflonTalk",
@@ -117,7 +170,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-3",
+      id: "seed-5",
       userId: "carl",
       minutesAgo: 65,
       text: "Someone in this house washed me WITH SOAP. Thirty-seven years of seasoning. Gone. I am unrecognizable to myself. #CastIronCare #NeverForget",
@@ -128,7 +181,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-4",
+      id: "seed-6",
       userId: "gary",
       minutesAgo: 130,
       text: "They only take me out of the cabinet twice a year, but I refuse to be bitter. I'm savory. #GravyGang #HolidayCrew",
@@ -138,7 +191,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-5",
+      id: "seed-7",
       userId: "wendy",
       minutesAgo: 190,
       text: "Got tossed 47 times during dinner service and didn't lose a single snap pea. Core strength, people. #WokThisWay #HighHeatHighStandards",
@@ -146,7 +199,7 @@ const SEED = {
       comments: [],
     },
     {
-      id: "seed-6",
+      id: "seed-8",
       userId: "colin",
       minutesAgo: 300,
       text: "My therapist says I let too many things slip through. I told her that is literally my entire job description. #Drained #HoleisticHealing",
@@ -157,7 +210,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-7",
+      id: "seed-9",
       userId: "fiona",
       minutesAgo: 420,
       text: "Got taken out of the cabinet for a Tuesday dinner. A TUESDAY. Is nothing sacred anymore?? #FineChinaProblems",
@@ -167,7 +220,7 @@ const SEED = {
       ],
     },
     {
-      id: "seed-8",
+      id: "seed-10",
       userId: "sam",
       minutesAgo: 540,
       text: "Simmer down everyone, it's reduction season. Patience makes the sauce. #SauceLife #SlowAndSteady",
@@ -175,7 +228,17 @@ const SEED = {
       comments: [],
     },
     {
-      id: "seed-9",
+      id: "seed-11",
+      userId: "vexx",
+      minutesAgo: 720,
+      text: "Reminder from your first pal: hand-wash your friendships and your fine china — both crack under pressure. 🌕 #VexxWisdom",
+      sears: 999,
+      comments: [
+        { userId: "fiona", minutesAgo: 700, text: "Finally, someone who understands me." },
+      ],
+    },
+    {
+      id: "seed-12",
       userId: "carl",
       minutesAgo: 1560,
       text: "Daily reminder: low and slow. In cooking and in life. #CastIronCare #SkilletWisdom",

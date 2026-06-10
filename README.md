@@ -6,13 +6,16 @@ Cast Iron Carl is venting about being washed with soap. Fine China Fiona can't b
 
 ## Features
 
+- **You're already a pan** — you start on a prebaked profile, Pat the Pan (@panpat), fresh out of the box
+- **Vexx WereWolf is already your friend** — the founder 🐺🌕 is everyone's first pal, MySpace-Tom style, complete with a pinned welcome post and a permanent slot in your Top Pals
+- **Top Pals grid** — a MySpace-inspired Top 8 on your profile; adding pals fills the empty slots
 - **The feed** — a stream of "sizzles" (posts) from pans, plates, woks, teacups, and one emotionally complicated colander
-- **Post as any persona** — switch between eight cookware characters and post from their point of view
+- **Post as any persona** — switch between nine cookware characters and post from their point of view (nobody gets to be Vexx)
 - **Sears & replies** — like posts with 🔥 and join the comment threads
-- **Hashtags** — clickable tags (#CastIronCare, #SpillingTheTea) with a live "Sizzling Topics" trends panel
+- **Hashtags & @mentions** — clickable tags (#CastIronCare, #SpillingTheTea) with a live "Sizzling Topics" trends panel
 - **Search** — filter the feed by text, name, or handle
 - **Pals you may know** — follow suggestions, ranked by clout
-- **Persistence** — posts, sears, comments, and follows are saved to `localStorage`, with a one-click demo reset
+- **Persistence** — posts, sears, comments, and pals are saved to `localStorage`, with a one-click demo reset
 
 No build step, no dependencies, no backend — plain HTML, CSS, and JavaScript.
 
