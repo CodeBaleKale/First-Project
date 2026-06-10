@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapCal — texts &amp; screenshots → calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="wordmark">Snap<em>Cal</em></div>
+    <nav>
+      <button class="tab active" data-view="capture">Capture</button>
+      <button class="tab" data-view="calendar">Calendar</button>
+      <button class="tab" data-view="tasks">Tasks <span id="task-count" class="count"></span></button>
+    </nav>
+    <a id="export-all" class="ghost-btn" href="/api/export.ics" title="Download every event and task as an .ics file">Export .ics</a>
+  </header>
+
+  <div id="key-banner" class="banner hidden">
+    ANTHROPIC_API_KEY isn’t configured on the server — extraction is disabled until it is set.
+  </div>
+
+  <main>
+    <!-- ============ Capture ============ -->
+    <section id="view-capture" class="view">
+      <p class="lede">Paste a text message, email, or note — or drop in screenshots of a conversation,
+      flyer, or booking — and SnapCal will pull out the events and to-dos for you.</p>
+
+      <textarea id="capture-text" rows="6"
+        placeholder="e.g.  “hey! dentist moved my cleaning to next thursday 2:30pm, and don’t forget mom’s birthday gift before saturday”"></textarea>
+
+      <div id="dropzone" tabindex="0">
+        <input type="file" id="file-input" accept="image/png,image/jpeg,image/gif,image/webp" multiple hidden>
+        <span>Drop screenshots here, or <u>browse</u> (up to 6)</span>
+      </div>
+      <div id="previews"></div>
+
+      <button id="extract-btn" class="primary">Extract events &amp; tasks</button>
+      <div id="extract-status" class="status hidden"></div>
+
+      <div id="review" class="hidden">
+        <h2>Review before adding</h2>
+        <p id="review-summary" class="summary"></p>
+        <div id="review-list"></div>
+        <button id="save-btn" class="primary">Add selected to SnapCal</button>
+      </div>
+    </section>
+
+    <!-- ============ Calendar ============ -->
+    <section id="view-calendar" class="view hidden">
+      <div class="cal-header">
+        <button id="cal-prev" class="ghost-btn">‹</button>
+        <h2 id="cal-title"></h2>
+        <button id="cal-next" class="ghost-btn">›</button>
+        <button id="cal-today" class="ghost-btn">Today</button>
+      </div>
+      <div class="cal-weekdays">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div id="cal-grid" class="cal-grid"></div>
+      <div id="day-panel" class="hidden">
+        <h3 id="day-panel-title"></h3>
+        <div id="day-panel-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ Tasks ============ -->
+    <section id="view-tasks" class="view hidden">
+      <div class="tasks-header">
+        <h2>To-dos</h2>
+        <label class="show-done"><input type="checkbox" id="show-done"> show completed</label>
+      </div>
+      <div id="task-list"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="hidden"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
