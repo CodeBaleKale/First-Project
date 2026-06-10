@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PanPals — Where Cookware Connects</title>
+  <meta name="description" content="The social network for pans and various dishware.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="logo" id="logo" type="button" title="Back to the full feed">🍳 PanPals</button>
+      <input class="search" id="search" type="search" placeholder="Search sizzles, #hashtags, pals…" aria-label="Search">
+      <div class="topbar-user" id="topbarUser"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar sidebar-left">
+      <section class="card profile-card" id="profileCard" aria-label="Your profile"></section>
+      <section class="card persona-card">
+        <h2>Post as…</h2>
+        <ul class="persona-list" id="personaList"></ul>
+      </section>
+    </aside>
+
+    <section class="feed-col">
+      <section class="card composer">
+        <div class="composer-row">
+          <span id="composerAvatar"></span>
+          <textarea class="composer-input" id="composerInput" rows="3" maxlength="280"></textarea>
+        </div>
+        <div class="composer-actions">
+          <span class="composer-hint">280 chars max. Keep it sizzling.</span>
+          <button class="post-btn" id="postBtn" type="button" disabled>Sizzle it</button>
+        </div>
+      </section>
+      <div class="filter-banner" id="filterBanner" hidden></div>
+      <div id="feed" aria-live="polite"></div>
+    </section>
+
+    <aside class="sidebar sidebar-right">
+      <section class="card">
+        <h2>Sizzling Topics</h2>
+        <ul class="trend-list" id="trendingList"></ul>
+      </section>
+      <section class="card">
+        <h2>Pals you may know</h2>
+        <ul class="suggest-list" id="suggestList"></ul>
+      </section>
+      <footer class="sidebar-footer">
+        <p>PanPals demo — your posts live in this browser.</p>
+        <button class="reset-btn" id="resetBtn" type="button">Reset demo data</button>
+      </footer>
+    </aside>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
